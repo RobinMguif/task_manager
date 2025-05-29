@@ -1,0 +1,2 @@
+INSERT INTO super_admin (username, password, role)
+VALUES ('admin', '@dmin@task', 'super_admin');
