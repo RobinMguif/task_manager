@@ -12,6 +12,8 @@ def login(request):
 
         try:
             sa = super_admin.objects.get(username=username, password=password)
+            request.session['userid'] = sa.id
+            # return HttpResponse(userid)
             print(sa)  # Debug log
             return redirect('superadmin_dashboard')
         except super_admin.DoesNotExist:
@@ -21,3 +23,6 @@ def login(request):
             print(f"Unexpected error: {e}")  # Helpful for catching other issues
 
     return render(request, 'login.html')
+
+def error_404(request):
+    return render(request,'404.html')

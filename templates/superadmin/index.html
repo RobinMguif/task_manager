@@ -87,11 +87,17 @@
                   <p>Dashboard</p>
                 </a>
               </li>
-              <li class="nav-section">
-                <span class="sidebar-mini-icon">
-                  <i class="fa fa-ellipsis-h"></i>
-                </span>
-                <h4 class="text-section">Components</h4>
+              <li class="nav-item">
+                <a href="{% url 'user_view' %}">
+                  <i class="fas fa-user"></i>
+                  <p>View Users</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'view_admin' %}">
+                  <i class="fas fa-desktop"></i>
+                  <p>View Admin</p>
+                </a>
               </li>
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">

@@ -3,5 +3,6 @@ from login import views
 
 urlpatterns = [
     path('',views.login,name='login'),
+    path('error_404',views.error_404,name='error_404')
     
 ]

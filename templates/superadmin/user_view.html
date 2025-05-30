@@ -1,0 +1,235 @@
+{% extends 'superadmin/index.html' %}
+{% load static %}
+
+
+{% block superadmin %}
+
+            
+    <div class="container">
+          <div class="page-inner">
+            <div class="row">
+                <!-- ===========================Message Box In HTML============================= -->
+                <div class="col-lg-12 d-flex justify-content-end">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show collapse"
+                         role="alert">
+                        {{ message|safe }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <!-- ========================Message Box End===================================== -->
+            </div>
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fa fa-user me-1"></i>Add User
+                </button>
+            </div>
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">View User</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive mt-3">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Phone No</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Password</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col">Action</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for n in users %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ n.name }}</td>
+                                            <td>{{ n.email }}</td>
+                                            <td>{{ n.phoneno }}</td>
+                                            <td>{{ n.username }}</td>
+                                            <td>{{ n.password }}</td>
+                                            <td>
+                                                {% if not n.is_admin %}
+                                                    User
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="#" title="Edit" data-bs-toggle="modal" data-bs-target="#editUserModal" data-id="{{ n.id }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="#" title="delete" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-id="{{ n.id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <!-- Edit User Modal -->
+                                        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="editUserForm" action="{% url 'user_edit' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{n.id}}" id="userId" name="user_id">
+                                                            <!-- Add other form fields here as needed -->
+                                                            <div class="mb-3">
+                                                                <label for="username" class="form-label">Promote to Admin</label>
+                                                                <select class="form-select" name="is_admin" id="">
+                                                                    <option value="" disabled>---Select---</option>
+                                                                    <option value="1" {% if n.is_admin %}selected{% endif %}>Yes</option>
+                                                                    <option value="0" {% if not n.is_admin %}selected{% endif %}>No</option>
+                                                                </select>
+                                                            </div>
+                                                            <!-- Add more fields as required -->
+                                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- delete modal -->
+                                         <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="editUserModalLabel">Delete Admin</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id="editUserForm" action="{% url 'delete_user' %}" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{n.id}}" id="userId" name="user_id">
+                                                            <!-- Add other form fields here as needed -->
+                                                            <div class="mb-3">
+                                                                <label for="username" class="form-label">Are You Realy Want to Delete <strong>"{{n.name}}"</strong>.</label>
+                                                               
+                                                            </div>
+                                                            <!-- Add more fields as required -->
+                                                             <div class="button">
+                                                                <button type="submit" class="btn btn-primary">Delete</button>
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                             </div>
+                                                            
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- User Add modal -->
+
+    <!-- Modal Structure -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Add your form or content here -->
+                <form action="{% url 'user_view' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" id="userName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Email</label>
+                        <input type="text" class="form-control" name="email" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" name="phone" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Password</label>
+                        <input type="text" class="form-control" name="password" id="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Is Admin</label>
+                        <select class="form-select" name="is_admin">
+                            <option value="" selected disabled>--select--</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Save</button>
+                </form>
+            </div>
+
+        <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save User</button>
+        </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ========================== View Users ======================== -->
+
+
+
+
+
+
+
+
+
+
+
+<!-- ==========ALERT BOX FADEOUT============= -->
+<script src="{% static 'admin/js/jquery_3.6.3.min.js' %}"></script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 4000);
+</script>
+<!-- ==========ALERT BOX FADEOUT============= -->
+
+{% endblock %}
