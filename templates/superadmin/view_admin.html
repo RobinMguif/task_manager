@@ -176,4 +176,17 @@
         </div>
     </div>
 
+
+
+
+<!-- ==========ALERT BOX FADEOUT============= -->
+<script src="{% static 'admin/js/jquery_3.6.3.min.js' %}"></script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 4000);
+</script>
+<!-- ==========ALERT BOX FADEOUT============= -->
 {% endblock %}
